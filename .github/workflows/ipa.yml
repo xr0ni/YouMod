@@ -310,6 +310,7 @@ jobs:
         if: ${{ inputs.ytuhd }}
         run: |
           cd YTUHD
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install meson ninja
           make libvpx dav1d
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
