@@ -109,7 +109,7 @@ concurrency:
 jobs:
   build:
     name: Build IPA with tweaks
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     permissions:
       contents: write
 
@@ -122,7 +122,6 @@ jobs:
       - name: Install MEGA downloader
         if: ${{ startsWith(inputs.ipa_url, 'https://mega.nz/') }}
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install megatools
 
       - name: Download IPA from Mega share link
@@ -137,7 +136,7 @@ jobs:
         env:
           IPA_URL: ${{ inputs.ipa_url }}
         run: |
-          wget "$IPA_URL" --quiet --no-verbose -O youtube.ipa
+          curl -sL "$IPA_URL" -o youtube.ipa
 
       - name: Validate IPA
         run: |
@@ -155,7 +154,6 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install make ldid
           echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV
@@ -163,7 +161,6 @@ jobs:
       - name: Install Go
         if: ${{ inputs.gonerino }}
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install go
 
       # Original from YTweaks
@@ -270,7 +267,7 @@ jobs:
         if: ${{ inputs.youslider }}
         run: |
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouSlider.git
-          wget --no-verbose --quiet https://github.com/Tonwalter888/Tonwalter888.github.io/raw/refs/heads/main/debs/alderis.deb
+          curl -sL https://github.com/Tonwalter888/Tonwalter888.github.io/raw/refs/heads/main/debs/alderis.deb -o alderis.deb
 
       - name: Clone YTweaks
         if: ${{ inputs.ytweaks }}
@@ -310,7 +307,6 @@ jobs:
         if: ${{ inputs.ytuhd }}
         run: |
           cd YTUHD
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install meson ninja
           make libvpx dav1d
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
